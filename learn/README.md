@@ -38,6 +38,8 @@ private helper functions you like.
       with the toolchain: `rustup doc --book`, `rustup doc --std`, `rustup doc --rust-by-example`,
       or jump to an item directly: `rustup doc std::io::BufRead`
 - [ ] `man 2 read` shows a page (Linux man pages, needed later in the course)
+- [ ] Diagrams: visit <https://excalidraw.com> once (it then works offline) or
+      `podman pull docker.io/excalidraw/excalidraw:latest` — see [`diagrams/README.md`](diagrams/README.md)
 
 Offline, build and test with `cargo build --offline` / `cargo test --offline` (plain `cargo build`
 also works once everything is fetched).
@@ -47,6 +49,7 @@ also works once everything is fetched).
 | # | Milestone | You learn | Needs Discord? |
 |---|---|---|---|
 | 0 | [Setup](00-setup.md) | The course workflow, offline tooling | no |
+| 0b | [Design: how it all fits](00b-design.md) | The architecture: actors, one tool call end to end, layers, errors, safety | no |
 | 1 | [JSON lines over stdin/stdout](01-json-lines.md) | `std::io`, generic readers/writers, closures, testing I/O | no |
 | 2 | [JSON-RPC 2.0](02-json-rpc.md) | Modelling a protocol with serde and enums, validation, errors as values | no |
 | 3 | [Speaking MCP](03-speaking-mcp.md) | Protocol versions, discovery, backward compatibility, state | no |
