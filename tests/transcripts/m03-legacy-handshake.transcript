@@ -1,0 +1,12 @@
+# A legacy (MCP 2025-11-25) client opens with initialize. We answer with the legacy version we
+# speak, our capabilities and our identity.
+> {"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-11-25","capabilities":{},"clientInfo":{"name":"ExampleClient","version":"1.0.0"}}}
+< {"jsonrpc":"2.0","id":1,"result":{"protocolVersion":"2025-11-25","capabilities":{"tools":{}},"serverInfo":{"name":"discord-mcp","version":"0.1.0"}}}
+
+# The client confirms with a notification: no reply.
+> {"jsonrpc":"2.0","method":"notifications/initialized"}
+< none
+
+# Legacy clients still have ping, and send no _meta version.
+> {"jsonrpc":"2.0","id":2,"method":"ping"}
+< {"jsonrpc":"2.0","id":2,"result":{}}

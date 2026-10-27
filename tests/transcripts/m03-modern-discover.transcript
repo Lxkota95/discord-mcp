@@ -1,0 +1,7 @@
+# A modern client asks what the server supports (MCP 2026-07-28, server/discover).
+> {"jsonrpc":"2.0","id":"d1","method":"server/discover","params":{"_meta":{"io.modelcontextprotocol/protocolVersion":"2026-07-28"}}}
+< {"jsonrpc":"2.0","id":"d1","result":{"resultType":"complete","supportedVersions":["2026-07-28","2025-11-25"],"capabilities":{"tools":{}},"_meta":{"io.modelcontextprotocol/serverInfo":{"name":"discord-mcp","version":"0.1.0"}},"ttlMs":3600000,"cacheScope":"public"}}
+
+# Discovery is stateless: asking again gives the same answer.
+> {"jsonrpc":"2.0","id":2,"method":"server/discover","params":{"_meta":{"io.modelcontextprotocol/protocolVersion":"2026-07-28"}}}
+< {"jsonrpc":"2.0","id":2,"result":{"resultType":"complete","supportedVersions":["2026-07-28","2025-11-25"],"capabilities":{"tools":{}},"_meta":{"io.modelcontextprotocol/serverInfo":{"name":"discord-mcp","version":"0.1.0"}},"ttlMs":3600000,"cacheScope":"public"}}

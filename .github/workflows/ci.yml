@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  push:
+    branches: [main, solutions]
+  pull_request:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  # main holds the course with stub implementations, whose tests fail on purpose until each
+  # milestone is done: check that everything compiles and is formatted
+  course:
+    name: build (stubs)
+    if: github.ref_name != 'solutions' && github.head_ref != 'solutions'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt
+      - run: cargo fmt --check
+      - run: cargo build --all-targets
+      - run: cargo test --no-run
+
+  # solutions must pass everything: this proves the course's tests and reference solutions agree
+  solutions:
+    name: fmt, clippy, test (solutions)
+    if: github.ref_name == 'solutions' || github.head_ref == 'solutions'
+    runs-on: ubuntu-latest
+    env:
+      RUSTFLAGS: -D warnings
+    steps:
+      - uses: actions/checkout@v7
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy, rustfmt
+      - run: cargo fmt --check
+      - run: cargo clippy --all-targets
+      - run: cargo test

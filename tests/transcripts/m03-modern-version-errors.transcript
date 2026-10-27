@@ -1,0 +1,8 @@
+# A version we don't support: MCP error -32022, listing what we do support.
+> {"jsonrpc":"2.0","id":1,"method":"server/discover","params":{"_meta":{"io.modelcontextprotocol/protocolVersion":"1900-01-01"}}}
+< {"jsonrpc":"2.0","id":1,"error":{"code":-32022,"message":"Unsupported protocol version","data":{"supported":["2026-07-28","2025-11-25"],"requested":"1900-01-01"}}}
+
+# No version at all (and no initialize before): invalid params, -32602.
+# The message is yours to write ("*" matches any text): make it say what to do.
+> {"jsonrpc":"2.0","id":2,"method":"server/discover"}
+< {"jsonrpc":"2.0","id":2,"error":{"code":-32602,"message":"*"}}

@@ -1,0 +1,7 @@
+# Not JSON: parse error with a null id (the request id can't be known).
+> {"jsonrpc":"2.0","id":1,"method":
+< {"jsonrpc":"2.0","id":null,"error":{"code":-32700,"message":"Parse error"}}
+
+# initialize without a protocolVersion: invalid params.
+> {"jsonrpc":"2.0","id":2,"method":"initialize","params":{}}
+< {"jsonrpc":"2.0","id":2,"error":{"code":-32602,"message":"*"}}
