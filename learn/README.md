@@ -32,17 +32,17 @@ private helper functions you like.
 
 ## Before going offline (do this while you have internet)
 
-- [ ] `git pull` in this repo (new milestones and fixes)
-- [ ] `cargo fetch` — downloads every dependency the **whole course** needs (they're all declared in
+- [x] `git pull` in this repo (new milestones and fixes)
+- [x] `cargo fetch` — downloads every dependency the **whole course** needs (they're all declared in
       `Cargo.toml` from the start)
-- [ ] `cargo build --all-targets` — so later builds can run with `--offline`
-- [ ] `cargo doc` — builds documentation for every dependency; open it with `cargo doc --open`
+- [x] `cargo build --all-targets` — so later builds can run with `--offline`
+- [x] `cargo doc` — builds documentation for every dependency; open it with `cargo doc --open`
       (search box included), or a single crate with `cargo doc --open -p serde_json`
-- [ ] `rustup doc` works — the Rust Book, standard library docs and Rust by Example are installed
+- [x] `rustup doc` works — the Rust Book, standard library docs and Rust by Example are installed
       with the toolchain: `rustup doc --book`, `rustup doc --std`, `rustup doc --rust-by-example`,
       or jump to an item directly: `rustup doc std::io::BufRead`
-- [ ] `man 2 read` shows a page (Linux man pages, needed later in the course)
-- [ ] Diagrams: visit <https://excalidraw.com> once (it then works offline) or
+- [x] `man 2 read` shows a page (Linux man pages, needed later in the course)
+- [x] Diagrams: visit <https://excalidraw.com> once (it then works offline) or
       `podman pull docker.io/excalidraw/excalidraw:latest` — see [`diagrams/README.md`](diagrams/README.md)
 
 Offline, build and test with `cargo build --offline` / `cargo test --offline` (plain `cargo build`
