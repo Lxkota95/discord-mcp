@@ -11,15 +11,19 @@ you're stuck. Claude and the internet are welcome extras, never requirements.
 
 ## How to use this course
 
-1. Read the milestone file (`learn/NN-*.md`) top to bottom once.
-2. Work through its **Tasks** checklist, ticking boxes (`- [x]`) as you go. Commit as often as you
-   like; the course doesn't care about your commit history.
+1. Start a branch for the milestone: `git switch main && git pull && git switch -c m01` (`main`
+   is protected: changes reach it through pull requests).
+2. Read the milestone file (`learn/NN-*.md`) top to bottom once, then work through its **Tasks**
+   checklist, ticking boxes (`- [x]`) as you go. Commit as often as you like.
 3. Run its **Done when** command. Red tests tell you what's missing; green means the milestone is done.
 4. Stuck for more than ~20 minutes? Open `learn/hints/NN.md` and read **one** hint, then try again.
 5. Still stuck, or curious how else it could be done? Compare with the reference solution:
    `git diff main mNN-solution -- src/` (or `git switch solutions` to browse; `git switch main` to
    get back). Reading a solution after a real attempt is learning, not cheating.
-6. Answer the **Reflect** questions in your own notes, then move on.
+6. Answer the **Reflect** questions in your own notes.
+7. Open a pull request for the milestone (`gh pr create`, or push the branch and use the link it
+   prints). CI checks that it builds; merge it when you're happy. This is also the natural point to
+   ask for a review. Offline, keep committing on the branch and open the PR when you're back online.
 
 The code you write lives in `src/`. Each module starts as **stubs**: the types and function
 signatures are given, and every function body is `todo!()`, so everything compiles and the tests
@@ -69,6 +73,6 @@ See [`reference/README.md`](reference/README.md).
 
 ## Getting a review
 
-When Claude (or anyone) is around: push your branch and ask for a review of the milestone. Useful
+When Claude (or anyone) is around: open the milestone's pull request and ask for a review. Useful
 questions: "Is this idiomatic?", "What would break under load?", "What did the reference solution
 do differently, and why?"
