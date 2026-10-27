@@ -14,11 +14,26 @@ use std::io::{self, BufRead, Write};
 /// Any I/O error from reading or writing, and [`io::ErrorKind::InvalidData`] if `handle` returns
 /// text containing a newline: the stdio transport forbids embedded newlines, because the newline is
 /// the message separator.
-#[allow(unused_variables, unused_mut)] // remove this line when you implement it
 pub fn run_lines<R: BufRead, W: Write>(
     input: R,
     mut output: W,
     mut handle: impl FnMut(&str) -> Option<String>,
 ) -> io::Result<()> {
-    todo!("milestone 1: see learn/01-json-lines.md")
+    for line in input.lines() {
+        let line = line?;
+        if line.trim().is_empty() {
+            continue;
+        }
+        if let Some(reply) = handle(&line) {
+            if reply.contains('\n') {
+                return Err(io::Error::new(
+                    io::ErrorKind::InvalidData,
+                    "a reply must be a single line",
+                ));
+            }
+            writeln!(output, "{reply}")?;
+            output.flush()?;
+        }
+    }
+    Ok(())
 }
