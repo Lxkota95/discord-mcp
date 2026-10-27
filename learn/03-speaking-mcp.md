@@ -7,6 +7,9 @@ of the protocol, then wire it to stdin/stdout in `src/main.rs`. At the end, `car
 **Time:** 2–3 hours. **Done when:** `cargo test --test m03_speaking_mcp` passes and the server
 answers `server/discover` from your terminal.
 
+**Start:** a branch for this milestone: `git switch main && git pull && git switch -c m03`.
+Offline, with `m02` not merged yet? Branch from it instead: `git switch -c m03 m02`.
+
 ## Why this matters
 
 MCP changed shape in its **2026-07-28** version, and real clients are mid-migration:
@@ -126,3 +129,10 @@ and the `printf … | cargo run` above prints a `server/discover` result.
 - The spec says a modern-only server should name its supported versions in any error it returns to
   `initialize`. Why would that message matter so much to a legacy client's user?
 - Where would you put a third protocol version, if MCP ships one next year?
+
+## Finish
+
+- [ ] Commit your work (ticked boxes, code, notes) on `m03`
+- [ ] `gh pr create --fill`, wait for the `build (stubs)` check, then merge it on GitHub.
+      Offline? Keep committing; open the PR when you're back online
+- [ ] `git switch main && git pull` — ready for the next milestone

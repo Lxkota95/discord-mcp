@@ -5,6 +5,9 @@ function, and write that function's replies back — the transport every MCP std
 
 **Time:** 1–2 hours. **Done when:** `cargo test --test m01_json_lines` passes.
 
+**Start:** a branch for this milestone: `git switch main && git pull && git switch -c m01`.
+Offline, with `m00b` not merged yet? Branch from it instead: `git switch -c m01 m00b`.
+
 ## Why this matters
 
 Claude Code starts an MCP server as a child process and talks to it over the process's **stdin**
@@ -92,3 +95,10 @@ cargo test --test m01_json_lines
 - What would go wrong if the server printed a debug message with `println!`?
 - Why is the "reply contains a newline" check an *error* rather than something to fix silently (for
   example by replacing the newline)?
+
+## Finish
+
+- [ ] Commit your work (ticked boxes, code, notes) on `m01`
+- [ ] `gh pr create --fill`, wait for the `build (stubs)` check, then merge it on GitHub.
+      Offline? Keep committing; open the PR when you're back online
+- [ ] `git switch main && git pull` — ready for the next milestone
