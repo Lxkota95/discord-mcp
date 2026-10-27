@@ -7,6 +7,9 @@ handled.
 **Time:** 1.5–2 hours of reading and sketching. No code. **Done when:** you can answer the
 checkpoint questions below without looking anything up.
 
+**Start:** a branch for this milestone: `git switch main && git pull && git switch -c m00b`.
+Offline, with `m00` not merged yet? Branch from it instead: `git switch -c m00b m00`.
+
 ## Reading (in this order, all offline)
 
 1. [`design.md`](design.md) — this server's design. Read it twice: once quickly, once slowly.
@@ -65,3 +68,10 @@ You can answer all seven questions from memory, and your call trace matches `des
 - What part of the design surprised you, or would you have done differently?
 - Write down two questions you still have. Bring them to a review session, or look for the answer as
   you build: many will answer themselves by milestone 4.
+
+## Finish
+
+- [ ] Commit your work (ticked boxes, code, notes) on `m00b`
+- [ ] `gh pr create --fill`, wait for the `build (stubs)` check, then merge it on GitHub.
+      Offline? Keep committing; open the PR when you're back online
+- [ ] `git switch main && git pull` — ready for the next milestone

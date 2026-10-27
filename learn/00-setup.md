@@ -5,6 +5,8 @@ built, tests running (and failing, because nothing is implemented yet).
 
 **Time:** ~30 minutes.
 
+**Start:** a branch for this milestone: `git switch main && git pull && git switch -c m00`.
+
 ## Tasks
 
 - [ ] Clone this repo into `~/repos/discord-mcp` (already done if you're reading this there)
@@ -31,3 +33,10 @@ built, tests running (and failing, because nothing is implemented yet).
 
 - Which three docs do you expect to use most? Is there anything you'd want offline that isn't here?
   (If so, note it — it can be added to `learn/reference/`.)
+
+## Finish
+
+- [ ] Commit your work (ticked boxes, code, notes) on `m00`
+- [ ] `gh pr create --fill`, wait for the `build (stubs)` check, then merge it on GitHub.
+      Offline? Keep committing; open the PR when you're back online
+- [ ] `git switch main && git pull` — ready for the next milestone

@@ -6,6 +6,9 @@ JSON.
 
 **Time:** 2–3 hours. **Done when:** `cargo test --test m02_json_rpc` passes.
 
+**Start:** a branch for this milestone: `git switch main && git pull && git switch -c m02`.
+Offline, with `m01` not merged yet? Branch from it instead: `git switch -c m02 m01`.
+
 ## Why this matters
 
 Every MCP message is a [JSON-RPC 2.0](reference/json-rpc.md) message: a small, strict envelope. Get
@@ -99,3 +102,10 @@ cargo test --test m02_json_rpc
   client do with an error it can't match to a request?
 - `parse` returns `Result<Incoming, Response>`. What are the advantages of the error being a ready-to-
   send reply rather than an error type like `ParseError`?
+
+## Finish
+
+- [ ] Commit your work (ticked boxes, code, notes) on `m02`
+- [ ] `gh pr create --fill`, wait for the `build (stubs)` check, then merge it on GitHub.
+      Offline? Keep committing; open the PR when you're back online
+- [ ] `git switch main && git pull` — ready for the next milestone
