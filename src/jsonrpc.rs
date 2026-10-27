@@ -1,11 +1,10 @@
 //! Milestone 2: JSON-RPC 2.0 messages, the envelope every MCP message travels in.
 //!
-//! The types are given (they follow the spec); your work is [`parse`] and [`Response::to_value`]
-//! (add private helper functions as you like).
+//! The types are given (they follow the spec); the work is in [`parse`] and [`Response::to_value`].
 //! See `learn/02-json-rpc.md`.
 
 use serde::{Deserialize, Serialize};
-use serde_json::Value;
+use serde_json::{Map, Value, json};
 
 /// Standard JSON-RPC 2.0 error codes.
 pub const PARSE_ERROR: i64 = -32700;
@@ -94,7 +93,14 @@ impl Response {
 
     /// The response as JSON: `{"jsonrpc": "2.0", "id": …, "result": …}` or `… "error": {…}`.
     pub fn to_value(&self) -> Value {
-        todo!("milestone 2: see learn/02-json-rpc.md")
+        let id = match &self.id {
+            Some(id) => json!(id),
+            None => Value::Null,
+        };
+        match &self.outcome {
+            Ok(result) => json!({ "jsonrpc": "2.0", "id": id, "result": result }),
+            Err(error) => json!({ "jsonrpc": "2.0", "id": id, "error": error }),
+        }
     }
 
     /// The response as one line of JSON, ready to write to stdout.
@@ -110,7 +116,54 @@ impl Response {
 /// # Errors
 ///
 /// The error is itself the [`Response`] to send.
-#[allow(unused_variables)] // remove this line when you implement it
 pub fn parse(line: &str) -> Result<Incoming, Response> {
-    todo!("milestone 2: see learn/02-json-rpc.md")
+    let value: Value = serde_json::from_str(line)
+        .map_err(|_| Response::error(None, ErrorObject::new(PARSE_ERROR, "Parse error")))?;
+
+    let Value::Object(object) = value else {
+        return Err(invalid(None, "a message must be a JSON object"));
+    };
+    // Read the id first, so later errors can be addressed to the request
+    let id = match object.get("id") {
+        None => None,
+        Some(raw) => Some(
+            serde_json::from_value::<Id>(raw.clone())
+                .map_err(|_| invalid(None, "id must be a number or a string"))?,
+        ),
+    };
+    if object.get("jsonrpc") != Some(&json!("2.0")) {
+        return Err(invalid(id, r#"jsonrpc must be "2.0""#));
+    }
+    let Some(Value::String(method)) = object.get("method") else {
+        return Err(invalid(id, "method must be a string"));
+    };
+    let params = params(&object).map_err(|message| invalid(id.clone(), message))?;
+
+    Ok(match id {
+        Some(id) => Incoming::Request(Request {
+            id,
+            method: method.clone(),
+            params,
+        }),
+        None => Incoming::Notification(Notification {
+            method: method.clone(),
+            params,
+        }),
+    })
+}
+
+/// `params` is optional, but when present must be an object or an array.
+fn params(object: &Map<String, Value>) -> Result<Option<Value>, &'static str> {
+    match object.get("params") {
+        None => Ok(None),
+        Some(p @ (Value::Object(_) | Value::Array(_))) => Ok(Some(p.clone())),
+        Some(_) => Err("params must be an object or an array"),
+    }
+}
+
+fn invalid(id: Option<Id>, message: &str) -> Response {
+    Response::error(
+        id,
+        ErrorObject::new(INVALID_REQUEST, format!("Invalid request: {message}")),
+    )
 }
