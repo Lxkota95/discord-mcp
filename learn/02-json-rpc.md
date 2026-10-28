@@ -59,9 +59,13 @@ enum Shape { Circle { size: Size }, Square { size: Size } }
 
 /// Reads `{"kind": "circle"|"square", "size": 3 | "big"}`.
 fn shape(text: &str) -> Result<Shape, String> {
-    let value: Value = serde_json::from_str(text).map_err(|e| format!("not JSON: {e}"))?;
-    let Value::Object(map) = value else { return Err("not an object".into()) };
-    let size: Size = serde_json::from_value(map.get("size").cloned().unwrap_or(Value::Null))
+    let value: Value = serde_json::from_str(text)
+        .map_err(|e| format!("not JSON: {e}"))?;
+    let Value::Object(map) = value else {
+        return Err("not an object".into());
+    };
+    let size = map.get("size").cloned().unwrap_or(Value::Null);
+    let size: Size = serde_json::from_value(size)
         .map_err(|_| "size must be a number or a string".to_string())?;
     match map.get("kind") {
         Some(k) if k == &json!("circle") => Ok(Shape::Circle { size }),
