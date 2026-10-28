@@ -71,19 +71,29 @@ use serde_json::{Value, json};
 struct Greeter { legacy: bool }
 
 impl Greeter {
-    fn handle(&mut self, method: &str, params: Option<&Value>) -> Result<Value, String> {
+    fn handle(
+        &mut self,
+        method: &str,
+        params: Option<&Value>,
+    ) -> Result<Value, String> {
         if method == "hello" {
             self.legacy = true;
             return Ok(json!({ "version": 1 }));
         }
         if self.legacy {
-            return match method { "greet" => Ok(json!("hi (v1)")), _ => Err(format!("unknown: {method}")) };
+            return match method {
+                "greet" => Ok(json!("hi (v1)")),
+                _ => Err(format!("unknown: {method}")),
+            };
         }
-        let version = params.and_then(|p| p.get("v")).and_then(Value::as_u64);
+        let version =
+            params.and_then(|p| p.get("v")).and_then(Value::as_u64);
         match (version, method) {
             (None, _) => Err("send v, or hello first".into()),
             (Some(2), "greet") => Ok(json!("hi (v2)")),
-            (Some(v), _) if v != 2 => Err(format!("unsupported version {v}")),
+            (Some(v), _) if v != 2 => {
+                Err(format!("unsupported version {v}"))
+            }
             (_, m) => Err(format!("unknown: {m}")),
         }
     }
@@ -105,7 +115,10 @@ impl Greeter {
 - [ ] Wire it up in `src/main.rs`: a `Server` and `run_lines` over `io::stdin().lock()` and
       `io::stdout().lock()`. Then try it:
       ```
-      printf '%s\n' '{"jsonrpc":"2.0","id":1,"method":"server/discover","params":{"_meta":{"io.modelcontextprotocol/protocolVersion":"2026-07-28"}}}' | cargo run -q
+      msg='{"jsonrpc":"2.0","id":1,"method":"server/discover",'
+      msg+='"params":{"_meta":'
+      msg+='{"io.modelcontextprotocol/protocolVersion":"2026-07-28"}}}'
+      printf '%s\n' "$msg" | cargo run -q
       ```
 - [ ] `cargo clippy --all-targets` is clean
 

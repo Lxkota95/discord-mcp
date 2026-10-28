@@ -49,7 +49,10 @@ client waiting forever for an answer that's sitting in a buffer.
 use std::io::{self, BufRead, Write};
 
 /// Writes the number of words on each line of `input` to `output`.
-fn word_counts(input: impl BufRead, mut output: impl Write) -> io::Result<()> {
+fn word_counts(
+    input: impl BufRead,
+    mut output: impl Write,
+) -> io::Result<()> {
     for line in input.lines() {
         let line = line?;
         writeln!(output, "{}", line.split_whitespace().count())?;
