@@ -7,21 +7,21 @@ builds one layer described here.
 ## 1. The actors
 
 ```
- ┌──────────────────────────── your laptop ─────────────────────────────┐
- │                                                                       │
- │   you ──▶ Claude Code (the "host")                                    │
- │             │  runs the conversation, shows you every tool call       │
- │             │  and asks your permission before running it             │
- │             │                                                         │
- │             ├── MCP client ──stdin/stdout──▶ discord-mcp (our server) │
- │             ├── MCP client ──────────────▶ another MCP server         │
- │             └── the model (Claude), over the internet                 │
- │                                                       │               │
- └───────────────────────────────────────────────────────┼───────────────┘
-                                                         │ HTTPS (bot token)
-                                                         ▼
-                                              Discord's REST API
-                                              (your Discord server)
+┌───────────────────────── your laptop ──────────────────────────┐
+│                                                                │
+│  you ──▶ Claude Code (the "host")                              │
+│            │  runs the conversation, shows you every           │
+│            │  tool call and asks before running it             │
+│            │                                                   │
+│            ├── MCP client ──stdio──▶ discord-mcp (our server)  │
+│            ├── MCP client ────────▶ another MCP server         │
+│            └── the model (Claude), over the internet           │
+│                                           │                    │
+└───────────────────────────────────────────┼────────────────────┘
+                                            │ HTTPS (bot token)
+                                            ▼
+                                   Discord's REST API
+                                   (your Discord server)
 ```
 
 - **Host — Claude Code.** Owns the conversation and the model. It starts MCP servers as child
@@ -44,20 +44,25 @@ Official version: [`reference/mcp/2026-07-28/architecture.mdx`](reference/mcp/20
 You ask Claude Code: *"Create a Gold role on my Discord server."*
 
 ```
- you        Claude Code / model         discord-mcp                         Discord
-  │  ask  ─▶ │                             │                                   │
-  │          │── (once) server/discover ──▶│  versions, capabilities, name     │
-  │          │◀──────── DiscoverResult ────│                                   │
-  │          │── tools/list ──────────────▶│  [list_roles, create_role, …]     │
-  │          │◀──────── tools + schemas ───│                                   │
-  │          │  model picks create_role,   │                                   │
-  │  ◀─approve? (permission prompt)        │                                   │
-  │  yes ──▶ │── tools/call create_role ──▶│ validate input, check allowlist  │
-  │          │   {"name": "Gold"}          │ (preview first, see §5)           │
-  │          │                             │── POST /guilds/{id}/roles ───────▶│
-  │          │                             │◀── 200 {"id": "…", "name":"Gold"} │
-  │          │◀── result: "Created Gold" ──│                                   │
-  │ ◀ answer │                             │                                   │
+you    Claude Code                  discord-mcp                  Discord
+         + model
+ │          │                            │                          │
+ │─ ask ───▶│                            │                          │
+ │          │─ server/discover ─────────▶│ (once)                   │
+ │          │◀── versions, capabilities ─│                          │
+ │          │─ tools/list ──────────────▶│                          │
+ │          │◀─── tools + input schemas ─│                          │
+ │          │ model picks create_role    │                          │
+ │◀ approve?│                            │                          │
+ │─ yes ───▶│                            │                          │
+ │          │─ tools/call create_role ──▶│                          │
+ │          │ {"name": "Gold"}           │ validate input, check    │
+ │          │                            │ allowlist, preview (§5)  │
+ │          │                            │ POST /guilds/{id}/roles ▶│
+ │          │                            │◀── 200 {id, name: Gold} ─│
+ │          │◀── result: "Created Gold" ─│                          │
+ │◀ answer ─│                            │                          │
+ │          │                            │                          │
 ```
 
 Full diagram: [`diagrams/tool-call.excalidraw`](diagrams/tool-call.excalidraw).
@@ -72,25 +77,25 @@ Each layer only knows about the one below it. That's what makes each one small a
 own — and it's the order of the milestones.
 
 ```
- ┌─────────────────────────────────────────────────────────────────────┐
- │ main.rs           wires it together: config, logging, stdin/stdout  │  m10
- ├─────────────────────────────────────────────────────────────────────┤
- │ safety            allowlisted guild, preview mode, audit reasons    │  m8, m9
- ├─────────────────────────────────────────────────────────────────────┤
- │ tools             list_roles, create_role, …: input schemas, calls  │  m4, m7, m9
- │                   into the Discord client, results for the model    │
- ├──────────────────────────────────────┬──────────────────────────────┤
- │ mcp (protocol)                       │ discord (REST client)        │  m3   │  m6
- │ versions, server/discover,           │ typed models, HTTP,          │
- │ initialize, routing methods          │ rate limits, errors          │
- ├──────────────────────────────────────┴──────────────────────────────┤
- │ jsonrpc           message envelope: parse, validate, reply          │  m2
- ├─────────────────────────────────────────────────────────────────────┤
- │ jsonl             one message per line over any reader/writer       │  m1
- ├─────────────────────────────────────────────────────────────────────┤
- │ async runtime     tokio: concurrent requests, cancellation          │  m5 (rebuilds
- │                                                                     │  m1's loop)
- └─────────────────────────────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────┐
+│ main.rs       config, logging, stdin/stdout            │ m10
+├────────────────────────────────────────────────────────┤
+│ safety        allowlisted guild, preview, audit log    │ m8, m9
+├────────────────────────────────────────────────────────┤
+│ tools         list_roles, create_role, …: schemas,     │ m4, m7, m9
+│               calls into Discord, results for model    │
+├───────────────────────────┬────────────────────────────┤
+│ mcp (protocol)            │ discord (REST client)      │ m3 | m6
+│ versions, discover,       │ typed models, HTTP,        │
+│ initialize, routing       │ rate limits, errors        │
+├───────────────────────────┴────────────────────────────┤
+│ jsonrpc       envelope: parse, validate, reply         │ m2
+├────────────────────────────────────────────────────────┤
+│ jsonl         one message per line, any reader/writer  │ m1
+├────────────────────────────────────────────────────────┤
+│ async runtime tokio: concurrency, cancellation         │ m5 (rebuilds
+│                                                        │ m1's loop)
+└────────────────────────────────────────────────────────┘
 ```
 
 Full diagram: [`diagrams/layers.excalidraw`](diagrams/layers.excalidraw).

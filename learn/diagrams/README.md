@@ -25,7 +25,8 @@ podman pull docker.io/excalidraw/excalidraw:latest
 Then, whenever you need it:
 
 ```sh
-podman run --rm -d --name excalidraw -p 127.0.0.1:5000:80 docker.io/excalidraw/excalidraw:latest
+podman run --rm -d --name excalidraw -p 127.0.0.1:5000:80 \
+    docker.io/excalidraw/excalidraw:latest
 # open http://localhost:5000, then menu → Open → pick the file
 podman stop excalidraw
 ```

@@ -5,11 +5,12 @@ A summary in our own words of the [JSON-RPC 2.0 specification](https://www.jsonr
 
 ## Messages
 
-Every message is a JSON **object** with `"jsonrpc": "2.0"`.
+Every message is a JSON **object** with `"jsonrpc": "2.0"`. Over stdio each message is exactly
+one line; the longer examples below are wrapped only to fit the page.
 
 **Request** — expects a reply:
 ```json
-{"jsonrpc": "2.0", "id": 1, "method": "tools/list", "params": {"cursor": "abc"}}
+{"jsonrpc":"2.0","id":1,"method":"tools/list","params":{"cursor":"abc"}}
 ```
 - `id`: a number or a string, chosen by the sender. MCP forbids `null` and requires ids to be unique
   per sender for the session.
@@ -18,13 +19,15 @@ Every message is a JSON **object** with `"jsonrpc": "2.0"`.
 
 **Notification** — a request without `id`. The receiver **must not** reply, not even with an error:
 ```json
-{"jsonrpc": "2.0", "method": "notifications/cancelled", "params": {"requestId": 1}}
+{"jsonrpc":"2.0","method":"notifications/cancelled",
+ "params":{"requestId":1}}
 ```
 
 **Response** — the reply to a request, with the request's `id` and exactly one of `result` or `error`:
 ```json
-{"jsonrpc": "2.0", "id": 1, "result": {"tools": []}}
-{"jsonrpc": "2.0", "id": 1, "error": {"code": -32601, "message": "Method not found"}}
+{"jsonrpc":"2.0","id":1,"result":{"tools":[]}}
+{"jsonrpc":"2.0","id":1,
+ "error":{"code":-32601,"message":"Method not found"}}
 ```
 - `error.code`: an integer; `error.message`: a short description; `error.data`: optional, anything.
 - If the request's `id` couldn't be read (e.g. the text wasn't JSON), the error's `id` is `null`.

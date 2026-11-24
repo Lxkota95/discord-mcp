@@ -9,6 +9,13 @@ Rust with tokio, and how to expose real-world actions to an AI safely.
 machine, ships tests that tell you when you're done, and has hints and a reference solution for when
 you're stuck. Claude and the internet are welcome extras, never requirements.
 
+## Reading the course
+
+Any Markdown viewer works: `cat` (mcat) in the terminal, Neovim, GitHub, or Obsidian. The source
+wraps lines at ~100 characters, which standard Markdown joins back into paragraphs. In Obsidian,
+turn on Settings → Editor → **Strict line breaks** so it does the same. Diagrams and code are
+kept within 72 columns, so they fit with Obsidian's default "Readable line length".
+
 ## How to use this course
 
 1. Start a branch for the milestone: `git switch main && git pull && git switch -c m01` (`main`
